@@ -1,0 +1,4 @@
+".\Objects\STARTUP.obj",
+".\Objects\XDD.obj" 
+TO ".\Objects\EDDD" 
+PRINT(".\Listings\EDDD.m51")

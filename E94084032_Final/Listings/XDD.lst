@@ -1,0 +1,505 @@
+C51 COMPILER V9.60.0.0   XDD                                                               01/04/2022 19:04:44 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE XDD
+OBJECT MODULE PLACED IN .\Objects\XDD.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE XDD.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\XDD.l
+                    -st) TABS(2) OBJECT(.\Objects\XDD.obj)
+
+line level    source
+
+   1          #include<regx51.h>
+   2          #include<string.h>
+   3          //unsigned int sp=1843; //100Hz===>9216,????20%=9216*0.2=1843?????
+   4          
+   5          //unsigned int sn=7373; //????80%=9216*0.8=7373?????
+   6          
+   7          //unsigned int temp;  //????????
+   8          
+   9          
+  10          void print_msg(char *);
+  11          void write(char, int);
+  12          void delay(unsigned int);
+  13          void init_uart();
+  14          char recivevalue;
+  15          char a[] = {'e','9','4','0','8','4','0','3','2'};
+  16          char r[] = {'r','u','n'};
+  17          char s[] = {'s','h','o','t','d','o','w','n','N'};
+  18          char t[] = {'t','a','p'};
+  19          char g[] = {'d','e','l'};
+  20          char on[]={'L','C','D','o','n'};
+  21          char off[]={'L','C','D','o','f','f'};
+  22          
+  23          char store[16];
+  24          int i = 0,j = 0;
+  25          int a_1=0;
+  26          int r1=0,r2=0,r3=0;
+  27          int s1=0,s2=0,s3=0;
+  28          int t1=0;
+  29          int d1=0;
+  30          int n = 0;
+  31          int v=0;
+  32          int e=0;
+  33          int k = 0xc0,l = 0x80;
+  34          int m=0;
+  35          int stage = 0;//for switch
+  36          int stage_2 =0;
+  37          int inter=0;
+  38          void main ()
+  39          { 
+  40   1      
+  41   1        P2_0=1;
+  42   1        P2_1=1;
+  43   1        P2_2=1;
+  44   1        P2_3=1;
+  45   1        P2_4=1;
+  46   1        P2_5=1;
+  47   1        P2_6=1;
+  48   1        P2_7=1;
+  49   1        delay(50000);
+  50   1        P1_0 = 1;
+  51   1        delay(50000);
+  52   1        
+  53   1            init_uart();
+  54   1        
+C51 COMPILER V9.60.0.0   XDD                                                               01/04/2022 19:04:44 PAGE 2   
+
+  55   1            write(0x38, 0);
+  56   1            write(0x0F, 0);
+  57   1            write(0x06, 0);
+  58   1            write(0x01, 0);
+  59   1            write(0x80, 0);
+  60   1            /*for(i;i<9;i++)
+  61   1            {
+  62   1              write(l, 0);
+  63   1              print_msg(&a[i]);
+  64   1              l=l+1;
+  65   1            }
+  66   1            l=0x80;
+  67   1            i=0;*/
+  68   1            //print_msg("E94084032");
+  69   1        
+  70   1      
+  71   1      
+  72   1            
+  73   1      
+  74   1          
+  75   1          write(0x40, 0);       //CGRAM start
+  76   1          write(0x00, 1);
+  77   1          write(0x0a, 1);
+  78   1          write(0x0a, 1);
+  79   1          write(0x00, 1);
+  80   1          write(0x11, 1);
+  81   1          write(0x0e, 1);
+  82   1          write(0x00, 1);
+  83   1          write(0x00, 1); 
+  84   1          //write(0xc0, 0);     //ROW2 LEFT
+  85   1          //write(0x00, 1);
+  86   1          
+  87   1          write(0x48, 0);       //CGRAM start
+  88   1          write(0x01,1);
+  89   1          write(0x03,1);
+  90   1          write(0x05,1);
+  91   1          write(0x09,1);
+  92   1          write(0x0b,1);
+  93   1          write(0x1b,1);
+  94   1          write(0x18,1);
+  95   1          write(0x00, 1);
+  96   1          
+  97   1          //write(0xcf, 0);     //ROW2 RIGHT
+  98   1          //write(0x01, 1);
+  99   1          
+ 100   1          //else if(inter==2){
+ 101   1           
+ 102   1            
+ 103   1          //}
+ 104   1          //else if
+ 105   1            while(1);
+ 106   1      }
+ 107          
+ 108          
+ 109          /////////UART//////////////////////////
+ 110          void init_uart(void)
+ 111          {
+ 112   1        SCON=0x50;
+ 113   1        TMOD=0x21;
+ 114   1        TH1=0xe6;
+ 115   1        TR1=1;
+ 116   1        IE=0x97;
+C51 COMPILER V9.60.0.0   XDD                                                               01/04/2022 19:04:44 PAGE 3   
+
+ 117   1        EX1=1;
+ 118   1      }
+ 119          
+ 120          void UART_Isr(void) interrupt 4
+ 121          { 
+ 122   1        while(RI == 0);
+ 123   1        RI=0;
+ 124   1        recivevalue=SBUF;
+ 125   1        store[n] = recivevalue;
+ 126   1        n = n+1;
+ 127   1        delay(5000);
+ 128   1        write(0x38, 0);
+ 129   1        write(0x0F, 0);
+ 130   1        write(0x06, 0);
+ 131   1        write(0x01, 0);
+ 132   1        write(0x80, 0);
+ 133   1        //print_msg("TYPEING... ...");
+ 134   1        write(k,0);
+ 135   1        
+ 136   1        for(j;j<n;j++)
+ 137   1        {
+ 138   2          write(k, 0);
+ 139   2          print_msg(&a[j]);
+ 140   2          k=k+1;
+ 141   2        }
+ 142   1            k=0xc0;
+ 143   1            j=0;
+ 144   1        
+ 145   1        ///////check run///////////////////////////////
+ 146   1        if(recivevalue==a[a_1])
+ 147   1        {
+ 148   2          a_1=a_1+1;
+ 149   2        }
+ 150   1        else{
+ 151   2         a_1=0;
+ 152   2        }
+ 153   1        if(recivevalue==g[d1] )//delete
+ 154   1        {
+ 155   2          d1=d1+1;
+ 156   2        }
+ 157   1        else
+ 158   1          {
+ 159   2            d1=0;
+ 160   2        }
+ 161   1        if(recivevalue==t[t1] )//graph
+ 162   1          {
+ 163   2          t1=t1+1;
+ 164   2          
+ 165   2        }
+ 166   1        else{
+ 167   2          t1=0;
+ 168   2        
+ 169   2        
+ 170   2        }
+ 171   1          
+ 172   1        if(recivevalue == r[r1] )//run
+ 173   1          {
+ 174   2            r1=r1+1;
+ 175   2          }
+ 176   1        else
+ 177   1          {
+ 178   2            r1=0;
+C51 COMPILER V9.60.0.0   XDD                                                               01/04/2022 19:04:44 PAGE 4   
+
+ 179   2          }
+ 180   1        if(recivevalue == s[s1] )//stop
+ 181   1          {
+ 182   2            s1=s1+1;
+ 183   2          }
+ 184   1        else
+ 185   1          {
+ 186   2            s1=0;
+ 187   2          }
+ 188   1          
+ 189   1            if(r1==3)
+ 190   1            {
+ 191   2              for (r2;r2<40;++r2)//run led
+ 192   2                {
+ 193   3                    write(0x1C,0);
+ 194   3                    delay(10000);
+ 195   3      
+ 196   3                }
+ 197   2                r2=0;
+ 198   2                r1=0;
+ 199   2            }
+ 200   1            else if(s1==9)//close
+ 201   1            {
+ 202   2          P1_6 = 1;
+ 203   2          P1_7 = 1;
+ 204   2          P2_0 = 1;
+ 205   2          P2_1 = 1;
+ 206   2          P2_2 = 1;
+ 207   2          P2_3 = 1;
+ 208   2          P2_4 = 1;
+ 209   2          P2_5 = 1;
+ 210   2          P2_6 = 1;
+ 211   2          P2_7 = 1;
+ 212   2          write(0x08, 0);
+ 213   2          delay(50000);
+ 214   2          P1_0 = 1;
+ 215   2              for(e=0;e<6;e++){
+ 216   3            SBUF=off[e];
+ 217   3              while(TI==0);
+ 218   3             TI=0; 
+ 219   3             }
+ 220   2          delay(50000);
+ 221   2          stage=0;
+ 222   2            memset(store,0,16);
+ 223   2            write(k,0);
+ 224   2            
+ 225   2            n=0;
+ 226   2            s1=0;
+ 227   2            }
+ 228   1            else if(t1==3)
+ 229   1        {
+ 230   2          delay(10000);
+ 231   2            write(0xcf, 0);   //ROW2 LEFT
+ 232   2            write(0x01, 1);
+ 233   2            delay(50000);
+ 234   2            write(0xce, 0);
+ 235   2            write(0x01, 1);
+ 236   2            delay(50000);
+ 237   2            write(0xcd, 0);
+ 238   2            write(0x01, 1);
+ 239   2            delay(50000);
+ 240   2            write(0xcc, 0);
+C51 COMPILER V9.60.0.0   XDD                                                               01/04/2022 19:04:44 PAGE 5   
+
+ 241   2            write(0x01, 1);
+ 242   2            delay(50000);
+ 243   2          t1=0;
+ 244   2       
+ 245   2        }
+ 246   1             else if(d1==3)
+ 247   1        {
+ 248   2            delay(10000);
+ 249   2            write(0x01,0);
+ 250   2            write(0xc0,0);
+ 251   2            memset(store,0,16);
+ 252   2            
+ 253   2            
+ 254   2            d1=0;  
+ 255   2        }
+ 256   1             else if(a_1==9)
+ 257   1        {
+ 258   2             delay(20000);
+ 259   2             P1_0=0;
+ 260   2             
+ 261   2             for(v=0;v<5;v++){
+ 262   3            SBUF=on[v];
+ 263   3              while(TI==0);
+ 264   3             TI=0; 
+ 265   3             }
+ 266   2             delay(20000);
+ 267   2             write(0x40, 0);       //CGRAM start
+ 268   2          write(0x00, 1);
+ 269   2          write(0x0a, 1);
+ 270   2          write(0x0a, 1);
+ 271   2          write(0x00, 1);
+ 272   2          write(0x11, 1);
+ 273   2          write(0x0e, 1);
+ 274   2          write(0x00, 1);
+ 275   2          write(0x00, 1); 
+ 276   2             write(0x80, 0);      //ROW2 LEFT
+ 277   2             write(0x00, 1);
+ 278   2             
+ 279   2             write(0x48, 0);       //CGRAM start
+ 280   2          write(0x01,1);
+ 281   2          write(0x03,1);
+ 282   2          write(0x05,1);
+ 283   2          write(0x09,1);
+ 284   2          write(0x0b,1);
+ 285   2          write(0x1b,1);
+ 286   2          write(0x18,1);
+ 287   2          write(0x00, 1);
+ 288   2             write(0x8f, 0);      //ROW2 RIGHT
+ 289   2             write(0x01, 1);
+ 290   2             stage=1;
+ 291   2          
+ 292   2             
+ 293   2             
+ 294   2        }
+ 295   1      
+ 296   1      
+ 297   1            
+ 298   1            
+ 299   1        
+ 300   1        ///////////////////////////////////////
+ 301   1          
+ 302   1        
+C51 COMPILER V9.60.0.0   XDD                                                               01/04/2022 19:04:44 PAGE 6   
+
+ 303   1      /////////////////////////////////////////////////
+ 304   1      
+ 305   1      }
+ 306          
+ 307          
+ 308          void interrupt0_Isr(void) interrupt 0
+ 309          {
+ 310   1          //////LCD/////////////////////////////////////////////////////
+ 311   1          delay(50000);
+ 312   1        if(stage_2== 0)
+ 313   1        {
+ 314   2          /*P1_6 = 1;
+ 315   2          P1_7 = 1;
+ 316   2          P2_0 = 1;
+ 317   2          P2_1 = 1;
+ 318   2          P2_2 = 1;
+ 319   2          P2_3 = 1;
+ 320   2          P2_4 = 1;
+ 321   2          P2_5 = 1;
+ 322   2          P2_6 = 1;
+ 323   2          P2_7 = 1;
+ 324   2          P1_0 = 1;*/
+ 325   2          stage_2= 1;
+ 326   2          write(0x08, 0);
+ 327   2          write(0x01, 0);
+ 328   2          memset(store,0,16);
+ 329   2          
+ 330   2          //write(k,0);
+ 331   2          n=0;    
+ 332   2        }
+ 333   1        else
+ 334   1        {
+ 335   2          write(0x0c,0);
+ 336   2          
+ 337   2          write(0x80,0);
+ 338   2          print_msg("Best(1)");
+ 339   2          write(0xc0,0);
+ 340   2          print_msg("Worst(8)");
+ 341   2          stage_2= 0;
+ 342   2        } 
+ 343   1        delay(10000);
+ 344   1        /*
+ 345   1          write(0x40, 0);       //CGRAM start
+ 346   1          write(0x00, 1);
+ 347   1          write(0x0a, 1);
+ 348   1          write(0x0a, 1);
+ 349   1          write(0x00, 1);
+ 350   1          write(0x11, 1);
+ 351   1          write(0x0e, 1);
+ 352   1          write(0x00, 1);
+ 353   1          write(0x00, 1); 
+ 354   1          write(0xc0, 0);     //ROW2 LEFT
+ 355   1          write(0x00, 1);
+ 356   1          
+ 357   1          write(0x48, 0);       //CGRAM start
+ 358   1          write(0x01,1);
+ 359   1          write(0x03,1);
+ 360   1          write(0x05,1);
+ 361   1          write(0x09,1);
+ 362   1          write(0x0b,1);
+ 363   1          write(0x1b,1);
+ 364   1          write(0x18,1);
+C51 COMPILER V9.60.0.0   XDD                                                               01/04/2022 19:04:44 PAGE 7   
+
+ 365   1          write(0x00, 1);
+ 366   1          write(0xcf, 0);     //ROW2 RIGHT
+ 367   1          write(0x01, 1);
+ 368   1          
+ 369   1          *////////////////////////////////   
+ 370   1      }
+ 371          
+ 372          //////////UART////////////////////////////////
+ 373          void print_msg(char*msg)
+ 374          {
+ 375   1        for (; *msg!='\0' ;++msg) 
+ 376   1              write(*msg,1); 
+ 377   1      }
+ 378          
+ 379          void write(char cmd, int rs_value)
+ 380          {
+ 381   1       P2= cmd;
+ 382   1       P1_6= rs_value;
+ 383   1       P1_7=1;
+ 384   1       delay(100);
+ 385   1       P1_7=0;
+ 386   1      }
+ 387          /////////////////////////////////////////////
+ 388          
+ 389          
+ 390          
+ 391          
+ 392          void interrupt2_Isr(void) interrupt 2
+ 393          {
+ 394   1        delay(10000);
+ 395   1        write(0x01,0);
+ 396   1        write(0x80,0);
+ 397   1        print_msg("Hey YoU");
+ 398   1        if(inter==2){
+ 399   2          for(m=0;m<40;++m)
+ 400   2        {
+ 401   3          write(0x1c,0);
+ 402   3          delay(10000);
+ 403   3        }
+ 404   2        
+ 405   2        }
+ 406   1        else if(inter==3){
+ 407   2        
+ 408   2        for(m=0;m<40;++m)
+ 409   2        {
+ 410   3          write(0x1c,0);
+ 411   3          delay(2000);
+ 412   3        }
+ 413   2          inter=0;
+ 414   2        
+ 415   2      }
+ 416   1        inter=inter+1;
+ 417   1        
+ 418   1        delay(10000);
+ 419   1        //for(m=0;m<40;++m)
+ 420   1        //{
+ 421   1          //write(0x1c,0);
+ 422   1          //delay(10000);
+ 423   1        //}
+ 424   1      }
+ 425          ////////////////timer0//////////////////////////
+ 426          /*void timer0_Isr(void) interrupt 1{
+C51 COMPILER V9.60.0.0   XDD                                                               01/04/2022 19:04:44 PAGE 8   
+
+ 427          if(P1_0==1)
+ 428          
+ 429          {
+ 430          
+ 431          TR0=0;
+ 432          
+ 433          temp=65536-sn;
+ 434          
+ 435          TH0=temp/256;
+ 436          
+ 437          TL0=temp%256;
+ 438          
+ 439          TR0=1;
+ 440          
+ 441          P1_0=0;
+ 442          
+ 443          }
+ 444          else
+ 445          {
+ 446          
+ 447          TR0=0;
+ 448          
+ 449          temp=65536-sp;
+ 450          
+ 451          TH0=temp/256;
+ 452          
+ 453          TL0=temp%256;
+ 454          
+ 455          TR0=1;
+ 456          
+ 457          P1_0=1;
+ 458          
+ 459          }
+ 460          }*/
+ 461          
+ 462          
+ 463          
+ 464          void delay(unsigned int t)
+ 465          {
+ 466   1        while(t--);
+ 467   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1575    ----
+   CONSTANT SIZE    =     25    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     95       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
